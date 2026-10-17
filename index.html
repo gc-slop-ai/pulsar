@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Пульсар</title>
+<meta name="description" content="Неоновый аренный шутер: деформируемая сетка, чёрные дыры, босс, тысячи частиц.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@500;700;900&family=Russo+One&display=swap" rel="stylesheet">
+<style>
+  :root { --cyan:#3ce6ff; --mag:#ff3cdc; --bg:#03030a; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden; color: #dff6ff;
+    font-family: 'Exo 2', system-ui, sans-serif; user-select: none; -webkit-user-select: none; }
+  canvas { display: block; position: fixed; inset: 0; width: 100vw; height: 100vh; }
+  body.playing canvas { cursor: none; }
+  .overlay { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 18px; text-align: center; padding: 16px; opacity: 0; pointer-events: none; transition: opacity .5s;
+    background: radial-gradient(ellipse at center, rgba(3,3,10,.15), rgba(3,3,10,.75)); }
+  .overlay.show { opacity: 1; pointer-events: auto; }
+  .logo { font-family: 'Russo One', 'Exo 2', sans-serif; font-size: clamp(54px, 13vw, 150px); margin: 0; letter-spacing: .08em;
+    color: #fff; text-shadow: 0 0 8px var(--cyan), 0 0 24px var(--cyan), 0 0 60px var(--mag), 0 0 120px var(--mag);
+    animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse { 50% { text-shadow: 0 0 6px var(--cyan), 0 0 16px var(--cyan), 0 0 40px var(--mag), 0 0 80px var(--mag); transform: scale(1.015); } }
+  .sub { font-size: clamp(14px, 2.4vw, 20px); letter-spacing: .35em; text-transform: uppercase; color: var(--cyan); margin-top: -10px; }
+  .controls { display: grid; grid-template-columns: auto auto; gap: 6px 18px; font-size: 15px; color: #9fc3d6; text-align: left;
+    background: rgba(10,20,40,.45); border: 1px solid rgba(60,230,255,.25); border-radius: 10px; padding: 14px 20px; }
+  .controls b { color: #fff; font-weight: 700; }
+  button { font-family: 'Russo One', sans-serif; font-size: 22px; letter-spacing: .15em; padding: 14px 44px; border-radius: 8px; cursor: pointer;
+    color: #fff; background: rgba(255,60,220,.12); border: 2px solid var(--mag);
+    box-shadow: 0 0 18px rgba(255,60,220,.6), inset 0 0 18px rgba(255,60,220,.35); text-shadow: 0 0 10px var(--mag); transition: transform .15s, background .15s; }
+  button:hover { transform: scale(1.06); background: rgba(255,60,220,.28); }
+  .big { font-family: 'Russo One', sans-serif; font-size: clamp(40px, 8vw, 84px); color: #fff; margin: 0;
+    text-shadow: 0 0 10px var(--mag), 0 0 40px var(--mag); }
+  .score { font-size: 28px; color: var(--cyan); text-shadow: 0 0 12px var(--cyan); }
+  .best { font-size: 16px; color: #9fc3d6; letter-spacing: .2em; }
+  .hint { font-size: 13px; color: #6f8fa3; }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="title" class="overlay show">
+  <h1 class="logo">ПУЛЬСАР</h1>
+  <div class="sub">неоновая арена</div>
+  <div class="controls">
+    <b>WASD / стрелки</b><span>движение</span>
+    <b>Мышь + ЛКМ</b><span>прицел и огонь</span>
+    <b>F</b><span>автоогонь вкл/выкл</span>
+    <b>Shift / ПКМ</b><span>рывок (неуязвимость)</span>
+    <b>Пробел</b><span>бомба</span>
+    <b>P / Esc · M</b><span>пауза · звук</span>
+  </div>
+  <button id="play">ИГРАТЬ</button>
+  <div class="best" id="bestTitle"></div>
+  <div class="hint">Геймпад тоже работает: левый стик — ход, правый — огонь, A — рывок, LB — бомба</div>
+</div>
+
+<div id="pause" class="overlay">
+  <p class="big">ПАУЗА</p>
+  <div class="hint">P / Esc — продолжить</div>
+</div>
+
+<div id="over" class="overlay">
+  <p class="big">КОНЕЦ ИГРЫ</p>
+  <div class="score" id="finalScore"></div>
+  <div class="best" id="finalInfo"></div>
+  <button id="again">ЕЩЁ РАЗ</button>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
